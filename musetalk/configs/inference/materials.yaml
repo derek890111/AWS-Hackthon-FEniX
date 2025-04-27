@@ -1,0 +1,11 @@
+task_0:
+ video_path: "data/video/yongen.mp4"
+#  video_path: "data/video/tom.png"
+ audio_path: "data/audio/yongen.wav"
+ result_dir: "materials/yongen"
+
+task_1:
+ video_path: "data/video/sun.mp4"
+ audio_path: "data/audio/eng.wav"
+ bbox_shift: -7
+ result_dir: "materials/sun"

@@ -1,0 +1,54 @@
+FROM nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04
+
+# 安裝系統工具 + Python 3.10 + pip
+RUN apt-get update && apt-get install -y \
+    curl \
+    ca-certificates \
+    software-properties-common \
+    unzip \
+    && add-apt-repository ppa:deadsnakes/ppa -y \
+    && apt-get update && apt-get install -y \
+    python3.10 \
+    python3.10-venv \
+    python3.10-distutils \
+    && curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10 \
+    && rm -rf /var/lib/apt/lists/*
+
+# 建立 python 指令的 symlink
+
+RUN ln -sf /usr/bin/python3.10 /usr/local/bin/python && \
+    ln -sf /usr/local/bin/pip3 /usr/local/bin/pip
+
+# 安裝 ffmpeg 靜態版
+RUN curl -L -o /tmp/ffmpeg-release.tar.xz https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz && \
+    mkdir -p /opt/ffmpeg && \
+    tar -xf /tmp/ffmpeg-release.tar.xz -C /opt/ffmpeg --strip-components=1 && \
+    ln -s /opt/ffmpeg/ffmpeg /usr/local/bin/ffmpeg && \
+    ln -s /opt/ffmpeg/ffprobe /usr/local/bin/ffprobe && \
+    rm /tmp/ffmpeg-release.tar.xz
+
+ENV PATH="/opt/ffmpeg:${PATH}"
+
+# 複製程式碼和 requirements.txt
+WORKDIR /musetalk
+COPY . /musetalk
+
+# 安裝 Python 套件
+RUN pip install --upgrade pip && \
+    pip install -r requirements.txt
+
+# mmlab packages
+RUN pip install --no-cache-dir -U openmim
+RUN mim install mmengine 
+RUN mim install "mmcv==2.0.1"
+RUN mim install "mmdet==3.1.0" 
+RUN mim install "mmpose==1.1.0"
+RUN apt-get update && apt-get install -y \
+    libgl1 \
+    libglib2.0-0 \
+    libsm6 \
+    libxext6 \
+    libxrender1
+
+RUN pip install sagemaker-inference
+ENV SAGEMAKER_PROGRAM="inference.py"

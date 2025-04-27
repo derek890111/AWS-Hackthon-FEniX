@@ -1,0 +1,9 @@
+# /opt/ml/model/...
+unet_model_path: "/models/musetalkV15/unet.pth"    # unet model path
+unet_config: "/models/musetalk/musetalk.json"      # unet config
+vae_type: "sd-vae-ft-mse"                           # vae model dir
+whisper_dir: "/models/whisper"                     # whisper model dir
+version: "v15"
+
+left_cheek_width: 90
+right_cheek_width: 90

@@ -1,0 +1,17 @@
+.DS_Store
+*.log
+.idea/
+.vscode/
+*.pyc
+.ipynb_checkpoints
+results/
+./models
+**/__pycache__/
+*.py[cod]
+*$py.class
+dataset/
+ffmpeg*
+debug
+exp_out
+models/
+materials/
